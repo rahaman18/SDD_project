@@ -16,7 +16,7 @@ This repository presents a complete pipeline for classifying healthy and patholo
 - **SHAP Values** for interpretable model decisions
 - **Stratified 5-Fold Cross Validation** to prevent data leakage and ensure generalizability
 
-## ?? Project Structure
+Project Structure
 
 ```
 speech-disorder-detection/
