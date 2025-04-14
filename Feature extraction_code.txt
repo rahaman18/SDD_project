@@ -1,0 +1,44 @@
+# mel_spectrogram.py
+import librosa
+import numpy as np
+
+def generate_mel_spectrogram(data, sr=22050, n_mels=128, n_fft=1024, hop_length=256):
+    mel_specs = []
+    for sample in data:
+        y, _ = librosa.load(sample['filepath'], sr=sr)
+        mel = librosa.feature.melspectrogram(y=y, sr=sr, n_fft=n_fft, 
+                                             hop_length=hop_length, n_mels=n_mels)
+        mel_db = librosa.power_to_db(mel, ref=np.max)
+        mel_specs.append(mel_db)
+    return np.array(mel_specs)
+
+
+# cwt_transform.py
+import pywt
+
+def generate_cwt_features(data, wavelet='morl', scales=np.arange(1, 129)):
+    cwt_features = []
+    for sample in data:
+        y, _ = librosa.load(sample['filepath'], sr=22050)
+        coef, _ = pywt.cwt(y, scales, wavelet)
+        cwt_db = librosa.power_to_db(np.abs(coef)**2, ref=np.max)
+        cwt_features.append(cwt_db)
+    return np.array(cwt_features)
+
+
+# handcrafted_acoustic.py
+import librosa
+
+def extract_handcrafted_features(data):
+    features = []
+    for sample in data:
+        y, sr = librosa.load(sample['filepath'], sr=22050)
+        zcr = np.mean(librosa.feature.zero_crossing_rate(y))
+        centroid = np.mean(librosa.feature.spectral_centroid(y=y, sr=sr))
+        bandwidth = np.mean(librosa.feature.spectral_bandwidth(y=y, sr=sr))
+        rolloff = np.mean(librosa.feature.spectral_rolloff(y=y, sr=sr))
+        mfccs = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13)
+        mfccs_mean = np.mean(mfccs, axis=1)
+        feature_vector = [zcr, centroid, bandwidth, rolloff] + mfccs_mean.tolist()
+        features.append(feature_vector)
+    return np.array(features)

@@ -1,0 +1,73 @@
+# mobilenet_v3.py
+from tensorflow.keras.applications import MobileNetV3Small
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import GlobalAveragePooling2D, Input
+import numpy as np
+
+class MobileNetV3:
+    def __init__(self, input_shape=(128, 128, 1)):
+        base = MobileNetV3Small(input_shape=input_shape, include_top=False, weights=None)
+        x = GlobalAveragePooling2D()(base.output)
+        self.model = Model(inputs=base.input, outputs=x)
+
+    def extract(self, data):
+        data = np.expand_dims(data, -1)
+        return self.model.predict(data)
+
+
+# efficientnet_b7.py
+from tensorflow.keras.applications import EfficientNetB7
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import GlobalAveragePooling2D, Input
+
+class EfficientNetB7:
+    def __init__(self, input_shape=(128, 128, 1)):
+        base = EfficientNetB7(input_shape=input_shape, include_top=False, weights=None)
+        x = GlobalAveragePooling2D()(base.output)
+        self.model = Model(inputs=base.input, outputs=x)
+
+    def extract(self, data):
+        data = np.expand_dims(data, -1)
+        return self.model.predict(data)
+
+
+# linformer.py
+import torch
+from linformer import Linformer
+
+class LinformerEncoder:
+    def __init__(self, dim=128, seq_len=256, depth=6, heads=8, k=64):
+        self.model = Linformer(dim=dim, seq_len=seq_len, depth=depth, heads=heads, k=k)
+
+    def extract(self, data):
+        data = torch.tensor(data).float()
+        return self.model(data).detach().numpy()
+
+
+# performer.py
+from performer_pytorch import Performer
+
+class PerformerEncoder:
+    def __init__(self, dim=128, depth=6, heads=8):
+        self.model = Performer(dim=dim, depth=depth, heads=heads)
+
+    def extract(self, data):
+        data = torch.tensor(data).float()
+        return self.model(data).detach().numpy()
+
+
+# fusion_attention.py
+import tensorflow as tf
+from tensorflow.keras.layers import Concatenate, Dense, Attention, Input
+from tensorflow.keras.models import Model
+
+class AttentionFusion:
+    def __init__(self):
+        pass
+
+    def combine(self, feature_list):
+        # Concatenate and apply dense attention-weighted fusion
+        concatenated = tf.concat(feature_list, axis=1)
+        attention_weights = tf.nn.softmax(tf.keras.layers.Dense(concatenated.shape[1])(concatenated))
+        weighted_features = concatenated * attention_weights
+        return weighted_features
