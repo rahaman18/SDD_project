@@ -20,16 +20,16 @@ Project Structure
 
 ```
 speech-disorder-detection/
-??? data/                  # Raw audio & preprocessing scripts
-??? features/              # Mel, CWT & handcrafted feature extractors
-??? models/                # CNN and ViT-based encoders + fusion module
-??? training/              # Training and evaluation scripts
-??? optimization/          # BOHB tuner and XGBoost integration
-??? interpretability/      # SHAP analysis and plots
-??? utils/                 # Metrics, logger, helper functions
-??? main.py                # Full training pipeline entry point
-??? requirements.txt       # Dependencies
-??? README.md              # Project overview
+ data/                  # Raw audio & preprocessing scripts
+ features/              # Mel, CWT & handcrafted feature extractors
+ models/                # CNN and ViT-based encoders + fusion module
+ training/              # Training and evaluation scripts
+ optimization/          # BOHB tuner and XGBoost integration
+interpretability/      # SHAP analysis and plots
+ utils/                 # Metrics, logger, helper functions
+ main.py                # Full training pipeline entry point
+ requirements.txt       # Dependencies
+ README.md              # Project overview
 ```
 
  Requirements
@@ -58,14 +58,14 @@ python main.py
 - SHAP feature importance plots
 - AUROC and AUPRC curves
 
-## ?? Notes
+## Notes
 - Ensure input spectrograms are normalized and resized to 128x128.
 - Preprocessing includes augmentation (pitch shift, noise, time stretch) for robustness.
 - Data split follows stratified K-fold to preserve class balance.
 
-## ?? Contributing
+##  Contributing
 Pull requests and research contributions are welcome! Please cite the original authors and datasets (SVD, VOICED) when using this repository.
 
-## ?? License
+##  License
 MIT License
 
